@@ -1,0 +1,39 @@
+# ---------------------------------------------------------------------------
+#  Example configuration that enables MoE Feed‑Forward blocks
+#  in encoder & decoder layers {2,4,6}.  Each MoE layer has 4 experts
+#  using Expert‑Choice routing (router params set inside the model code).
+# ---------------------------------------------------------------------------
+model:
+  n_layer: 6
+  d_model: 512
+  n_head: 8
+  d_ff: 2048
+  dropout: 0.1
+  moe_layers: [2, 4, 6]     # 1‑based indexing for readability
+  num_experts: 4            # homogeneous FFN experts per MoE layer
+
+data:
+  data_root: data/USPTO_480k/
+  # vocab_file: vocab.pkl
+  # train_file: train.npz
+  # val_file:   val.npz
+  # test_file:  test.npz
+  batch_size: 64
+  num_workers: 4
+
+training:
+  max_epoch:   50
+  max_lr:      1.0e-3
+  min_lr:      1.0e-5
+  weight_decay: 1.0e-4
+  grad_clip:   0.5
+  seed:        42
+  log_interval: 100
+  device:      cuda
+  aux_loss_weight: 0.02   # λ in  loss = CE + λ · aux
+  debug_samples: 1000     # if --debug flag is used
+  
+output:
+  ckpt_dir: checkpoints/
+  ckpt_interval: 5
+  log_file:   train_moe.log

@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chem-moe-transformer"
+version = "0.1.0"
+description = "Transformer‑based chemical reaction predictor with Mixture‑of‑Experts"
+authors = [{ name = "Aaron Feng", email = "aaron@example.com" }]
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+
+dependencies = [
+    "torch>=2.1",
+    "pyyaml>=6.0",
+    "numpy>=1.23",
+    "selfies>=2.1.1",
+    "tqdm",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff", "build", "wheel"]
+
+[tool.setuptools.packages.find]
+include = ["models*", "utils*", "training*", "evaluation*", "preprocessing*"]
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "W"]
+
+[tool.pytest.ini_options]
+addopts = "-q"

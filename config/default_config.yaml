@@ -1,0 +1,38 @@
+# ---------------------------------------------------------------------------
+#  Default configuration for ChemMoETransformer *without* MoE layers.
+#  Adjust values as needed in experiment‑specific YAML files.
+# ---------------------------------------------------------------------------
+model:
+  n_layer: 6            # encoder & decoder layers
+  d_model: 512
+  n_head: 8
+  d_ff: 2048
+  dropout: 0.1
+  moe_layers: []        # empty list ⇒ no MoE; dense FFNs everywhere
+  num_experts: 0        # ignored when moe_layers = []
+
+data:
+  data_root: data/USPTO_480k/      # directory produced by preprocessing
+  # vocab_file:  vocab.pkl           # filename inside data_root
+  # train_file:  train.npz
+  # val_file:    val.npz
+  # test_file:   test.npz
+  batch_size:  64
+  num_workers: 2
+
+training:
+  max_epoch:   50
+  max_lr:      1.0e-3
+  min_lr:      1.0e-5
+  weight_decay: 1.0e-4
+  grad_clip:   0.5
+  seed:        42
+  log_interval: 100               # mini‑batches
+  device:      cuda               # “cpu” or “cuda”\
+  aux_loss_weight: 0.02   # λ in  loss = CE + λ · aux
+  debug_samples: 1000     # if --debug flag is used
+
+output:
+  ckpt_dir: checkpoints/
+  ckpt_interval: 5                # save every N epochs
+  log_file:   train.log
