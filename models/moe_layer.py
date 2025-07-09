@@ -159,14 +159,17 @@ class MoEFFN(nn.Module):
             else:
                 expert_inputs[0].append(tok_id)
 
-        # Gather -> run expert -> scatter
+        # Gather -> run expert -> scatter, with dtype alignment under AMP
         out_tokens = torch.empty_like(tokens)             # (T, D)
         for e, tok_ids in enumerate(expert_inputs):
             if not tok_ids:
                 continue
             idx = torch.tensor(tok_ids, device=x.device)
             expert_out = self.experts[e](tokens[idx])
+            # Cast to match out_tokens’ dtype (e.g. FP16 under autocast)
+            expert_out = expert_out.to(out_tokens.dtype)
             out_tokens[idx] = expert_out
+
 
         # Reshape back to (L, B, D)
         out = out_tokens.reshape(L, B, D)

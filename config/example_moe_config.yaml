@@ -14,12 +14,10 @@ model:
 
 data:
   data_root: data/USPTO_480k/
-  # vocab_file: vocab.pkl
-  # train_file: train.npz
-  # val_file:   val.npz
-  # test_file:  test.npz
+  vocab_file: data/USPTO_480k/vocab_smiles.txt
   batch_size: 64
   num_workers: 4
+
 
 training:
   max_epoch:   50
