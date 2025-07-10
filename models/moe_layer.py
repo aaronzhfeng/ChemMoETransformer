@@ -147,7 +147,8 @@ class MoEFFN(nn.Module):
         for e, lst in enumerate(expert_lists):
             lst.sort(key=lambda z: z[0], reverse=True)
             chosen = [tok_id for _, tok_id in lst[:capacity]]
-            assignments[torch.tensor(chosen, device=x.device)] = e
+            idx = torch.tensor(chosen, dtype=torch.long, device=x.device)
+            assignments[idx] = e
 
         cap_loss = self._capacity_loss(assignments, self.n_experts, capacity)
 
@@ -169,7 +170,6 @@ class MoEFFN(nn.Module):
             # Cast to match out_tokens’ dtype (e.g. FP16 under autocast)
             expert_out = expert_out.to(out_tokens.dtype)
             out_tokens[idx] = expert_out
-
 
         # Reshape back to (L, B, D)
         out = out_tokens.reshape(L, B, D)

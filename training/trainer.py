@@ -21,6 +21,7 @@ from pathlib import Path
 import torch
 import torch.nn.functional as F
 from torch.cuda.amp import GradScaler, autocast
+from tqdm import tqdm
 
 
 class Trainer:
@@ -102,7 +103,9 @@ class Trainer:
         total_tok, correct_tok = 0, 0
         total_seq, correct_seq = 0, 0
 
-        for batch in dl:
+        # initialize tqdm progress bar so we can update it with live metrics
+        pbar = tqdm(dl, desc=f"Epoch {epoch}")
+        for batch in pbar:
             src = batch["src_tokens"].to(self.device)
             dec_in = batch["decoder_in"].to(self.device)
             tgt = batch["tgt_tokens"].to(self.device)
@@ -122,6 +125,9 @@ class Trainer:
                 self.scaler.step(self.optimizer)
                 self.scaler.update()
                 self.optimizer.zero_grad()
+
+            # update tqdm bar with latest loss value
+            pbar.set_postfix(loss=f"{loss.item():.4f}")
 
             tok_acc, seq_acc = self._accuracy(logits.detach(), tgt, self.pad_id, self.seq_eos_id)
 

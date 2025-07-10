@@ -29,7 +29,7 @@ def _dict_to_namespace(d: dict) -> SimpleNamespace:
     return SimpleNamespace(**out)
 
 
-def load_config(path: str | Path) -> SimpleNamespace:
+def load_config(path: str) -> SimpleNamespace:
     """Load YAML file *path* and return a SimpleNamespace tree."""
     path = Path(path)
     if not path.is_file():

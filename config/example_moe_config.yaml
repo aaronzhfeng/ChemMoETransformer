@@ -15,23 +15,23 @@ model:
 data:
   data_root: data/USPTO_480k/
   vocab_file: data/USPTO_480k/vocab_smiles.txt
-  batch_size: 64
-  num_workers: 4
+  batch_size: 256
+  num_workers: 8
 
 
 training:
-  max_epoch:   50
-  max_lr:      1.0e-3
-  min_lr:      1.0e-5
-  weight_decay: 1.0e-4
-  grad_clip:   0.5
+  max_epoch:   80
+  max_lr:      2.0e-4
+  min_lr:      2.0e-5
+  weight_decay: 0.0
+  grad_clip:   1.0
   seed:        42
-  log_interval: 100
-  device:      cuda
+  log_interval: 500
+  device:      cuda:1
   aux_loss_weight: 0.02   # λ in  loss = CE + λ · aux
   debug_samples: 1000     # if --debug flag is used
   
 output:
   ckpt_dir: checkpoints/
-  ckpt_interval: 5
+  ckpt_interval: 10
   log_file:   train_moe.log

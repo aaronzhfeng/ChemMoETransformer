@@ -15,7 +15,8 @@ from pathlib import Path
 
 import numpy as np
 import torch
-
+import sys
+sys.path.append('.')
 from utils.config_parser import load_config
 from utils.dataset_utils import build_dataloader, _load_vocab
 from models import build_model
